@@ -14,12 +14,35 @@ type Split struct{
 	IndependetMoney int
 }
 
-func divider(income int) {
+func divider(income int) *Split {	
 	result := &Split{
-		NeedsExpense: income * (50/100),
-		SavingExpense: NeedsExpense * (30/100),
-		IndependetMoney: SavingExpense * (20/100),
+		NeedsExpense: income * 50/100,
+		SavingExpense: income * 30/100,
+		IndependetMoney: income * 20/100,
 	}
+
+	return result
+}
+
+func moneyFormatter (amount int) string{
+	amountStr := strconv.Itoa(amount)
+	n := len(amountStr)
+
+	result := ""
+	count := 0
+	
+	for i := n-1; i >= 0; i--{
+		result = string(amountStr[i]) + result
+		count++
+		
+		if count % 3 == 0{
+			result = "," + result
+		}
+	}
+
+	result = "Rp" + result + ".00"
+
+	return result
 }
 
 func main(){
@@ -37,18 +60,15 @@ func main(){
 	incomeStr,_ := incomeReader.ReadString('\n')
 	incomeStr = strings.TrimSpace(incomeStr)
 	
-	income, err := strconv.Atoi(income)
+	income, err := strconv.Atoi(incomeStr)
 	if err != nil{
 		fmt.Println("Invalid number:", err)
 		return
 	}
 
-	divider(income)
+	divide := divider(income)
+	fmt.Printf("Needss: %s\n", moneyFormatter(divide.NeedsExpense) )
+	fmt.Printf("Saving: %s\n", moneyFormatter(divide.SavingExpense) )
+	fmt.Printf("Independent: %s\n", moneyFormatter(divide.IndependetMoney) )	
 	
-
-	// reader := bufio.NewReader(os.Stdin)
-	// name, _ := reader.ReadString('\n')
-	// name = strings.TrimSpace(name)
-
-	// fmt.Println("Hello", name)
 }
